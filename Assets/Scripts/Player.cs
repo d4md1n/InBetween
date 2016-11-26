@@ -173,7 +173,7 @@ public class Player : MonoBehaviour
         if (gameObject.tag == "main" && (coll.gameObject.tag == "Kill1" || coll.gameObject.tag == "Kill2"))
         {
             Destroy(coll.gameObject);
-            possess.level++;
+            Possess.level++;
         }
         if (gameObject.tag == "Player")
         {
@@ -190,7 +190,7 @@ public class Player : MonoBehaviour
 
                 Destroy(coll.gameObject);
                 killed2 = true;
-                possess.level++;
+                Possess.level++;
 
             }
         }
