@@ -85,7 +85,7 @@ namespace Assets.Scripts
                 hit = true;
                 dialogue.enabled =true;
                 god.SetActive(true);
-                if (gameManager.GetComponent<possess>().getLevel() >3)
+                if (gameManager.GetComponent<Possess>().getLevel() >3)
                 {
                     bad = true;
                     //  bat.SetActive(true);
