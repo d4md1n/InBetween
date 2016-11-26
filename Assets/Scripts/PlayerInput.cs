@@ -1,28 +1,35 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Player))]
-public class PlayerInput : MonoBehaviour
+namespace Assets.Scripts
 {
-    private Player player;
-
-    private void Start()
+    [RequireComponent(typeof(Player))]
+    public class PlayerInput : MonoBehaviour
     {
-        player = GetComponent<Player>();
-    }
+        private Player player;
 
-    private void Update()
-    {
-        Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        player.SetDirectionalInput(directionalInput);
-
-        if (Input.GetButtonDown("Jump"))
+        private void Start()
         {
-            player.OnJumpInputDown();
+            print("entered start function Player Input");
+            player = GetComponent<Player>();
+
         }
 
-        if (Input.GetButtonUp("Jump"))
+        private void Update()
         {
-            player.OnJumpInputUp();
+            Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            player.SetDirectionalInput(directionalInput);
+
+            //print("test");
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                player.OnJumpInputDown();
+            }
+
+            if (Input.GetButtonUp("Jump"))
+            {
+                player.OnJumpInputUp();
+            }
         }
     }
 }
