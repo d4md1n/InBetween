@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -66,7 +67,6 @@ namespace Assets.Scripts
             float targetVelocityX = directionalInput.x * moveSpeed;
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing,
                 (controller.collisions.below ? accelerationTimeGrounded : accelerationTimeAirborne));
-            velocity.y += gravity * Time.deltaTime;
         }
 
         public void SetDirectionalInput(Vector2 directionalInput)
@@ -76,41 +76,32 @@ namespace Assets.Scripts
 
         public void OnJumpInputDown()
         {
-            var variable = CanFly || controller.collisions.below;
-            if (variable)
+            if (CanFly || controller.collisions.below)
             {
                 velocity.y = maxJumpVelocity;
             }
         }
 
-        public void OnJumpInputUp()
+        private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (velocity.y > minJumpVelocity)
+            if (gameObject.tag == "main" && (collision.gameObject.tag == "Kill1" || collision.gameObject.tag == "Kill2"))
             {
-                velocity.y = minJumpVelocity;
-            }
-        }
-
-        void OnCollisionEnter2D(Collision2D coll)
-        {
-            if (gameObject.tag == "main" && (coll.gameObject.tag == "Kill1" || coll.gameObject.tag == "Kill2"))
-            {
-                Destroy(coll.gameObject);
+                Destroy(collision.gameObject);
                 Possess.level++;
             }
             if (gameObject.tag == "Player")
             {
-                if (coll.gameObject.tag == "Kill1")
+                if (collision.gameObject.tag == "Kill1")
                 {
 
-                    Destroy(coll.gameObject);
+                    Destroy(collision.gameObject);
                     Killed1 = true;
 
                 }
-                if (coll.gameObject.tag == "Kill2")
+                if (collision.gameObject.tag == "Kill2")
                 {
 
-                    Destroy(coll.gameObject);
+                    Destroy(collision.gameObject);
                     Killed2 = true;
                     Possess.level++;
 
