@@ -7,15 +7,14 @@ namespace Assets.Scripts
         public Canvas dialogue;
         public GameObject player;
         public GameObject spirit;
-        bool play;
-        // Use this for initialization
+        private bool play;
+
         void Start () {
             player.GetComponent<Player>().enabled = false;
             dialogue.enabled = false;
             play = false;
         }
 
-        // Update is called once per frame
         void Update () {
             if (spirit.transform.position.y > 4 && !play)
             {
@@ -31,7 +30,7 @@ namespace Assets.Scripts
                 play = true;
                 player.GetComponent<Player>().enabled = true;
                 print("game began");
-                print(player.GetComponent<Player>().canDoubleJump);
+                print(player.GetComponent<Player>().CanDoubleJump);
             }
 
             if (Input.GetKeyDown(KeyCode.Escape) && !dialogue.enabled)

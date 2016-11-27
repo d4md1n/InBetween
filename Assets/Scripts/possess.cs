@@ -47,7 +47,7 @@ namespace Assets.Scripts
 
         // Update is called once per frame
         void Update () {
-            if ((!playerActive && Input.GetKeyDown(KeyCode.Z) && !pressed) || Player.killed1 || Player.killed2)
+            if ((!playerActive && Input.GetKeyDown(KeyCode.Z) && !pressed) || Player.Killed1 || Player.Killed2)
             {
                 player.transform.position = other.transform.position;
                 pressed = true;
@@ -59,18 +59,18 @@ namespace Assets.Scripts
                 print(level);
                 dog.GetComponent<Player>().enabled = false;
                 bat.GetComponent<Player>().enabled = false;
-                if (level == 4 || level ==3 || Player.killed2)
+                if (level == 4 || level ==3 || Player.Killed2)
                 {
                     dogActive = false;
-                    Player.killed2 = false;
+                    Player.Killed2 = false;
                     switchToPlayer(player, dog, cameraPlayer, cameraPlayer);
                     audioSource.PlayOneShot(dogDyingSound, 1);
                     dogParticles.gameObject.SetActive(true);
                 }
-                else if (level == 2 || Player.killed1)
+                else if (level == 2 || Player.Killed1)
                 {
                     batActive = false;
-                    Player.killed1 = false;
+                    Player.Killed1 = false;
                     switchToPlayer(player, bat, cameraPlayer, cameraPlayer);
                     audioSource.PlayOneShot(batDyingSound, 1);
                     batParticles.gameObject.SetActive(true);
@@ -126,7 +126,7 @@ namespace Assets.Scripts
 
             if (playerActive)
             {
-                print("aaa");
+                //print("aaa");
                 moveCamera(cameraPlayer, player);
 
             }

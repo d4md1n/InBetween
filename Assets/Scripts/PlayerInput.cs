@@ -9,17 +9,13 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            print("entered start function Player Input");
             player = GetComponent<Player>();
-
         }
 
         private void Update()
         {
             Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             player.SetDirectionalInput(directionalInput);
-
-            //print("test");
 
             if (Input.GetButtonDown("Jump"))
             {

@@ -6,15 +6,20 @@ namespace Assets.Scripts
     [RequireComponent(typeof(Controller2D))]
     public class Player : MonoBehaviour
     {
-        public float maxJumpHeight = 4f;
-        public float minJumpHeight = 1f;
-        public float timeToJumpApex = .4f;
+        public float MaxJumpHeight = 4f;
+        public float MinJumpHeight = 1f;
+        public float TimeToJumpApex = .4f;
+
+        public static bool Killed1;
+        public static bool Killed2;
+
+
         private float accelerationTimeAirborne = .2f;
         private float accelerationTimeGrounded = .1f;
         private float moveSpeed = 6f;
 
-        public bool canDoubleJump;
-        private bool isDoubleJumping = false;
+        public bool CanDoubleJump;
+        private bool isDoubleJumping;
 
         private float gravity;
         private float maxJumpVelocity;
@@ -23,55 +28,37 @@ namespace Assets.Scripts
         private float velocityXSmoothing;
 
         private Controller2D controller;
-        Animator moving;
-        Animator stoping;
+        private Animator moving;
+        private Animator stoping;
         private Vector2 directionalInput;
 
-        public static bool killed1;
-        public static bool killed2;
 
         private void Start()
         {
-            print("entered start function Player");
-            killed1 = false;
-            killed2 = false;
             moving = GetComponent<Animator>();
             controller = GetComponent<Controller2D>();
-            gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-            maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
-            minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
+            gravity = -(2 * MaxJumpHeight) / Mathf.Pow(TimeToJumpApex, 2);
+            maxJumpVelocity = Mathf.Abs(gravity) * TimeToJumpApex;
+            minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * MinJumpHeight);
 
         }
 
         private void Update()
         {
-
-            //print("entered updated function in Player");
             CalculateVelocity();
             controller.Move(velocity * Time.deltaTime, directionalInput);
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                print("player Right pressed");
-                moving.SetTrigger("Move");
-            }
-            if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow))
-            {
-                moving.SetTrigger("Stop");
-            }
             if (controller.collisions.above || controller.collisions.below)
             {
                 velocity.y = 0f;
             }
 
-            if (Input.GetKeyDown(KeyCode.RightArrow))
+            if (directionalInput.x != 0)
             {
-
-                GetComponent<SpriteRenderer>().flipX = false;
+                moving.SetTrigger("Move");
+                if (directionalInput.x == -1) GetComponent<SpriteRenderer>().flipX = true;
+                if (directionalInput.x == 1) GetComponent<SpriteRenderer>().flipX = false;
             }
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                GetComponent<SpriteRenderer>().flipX = true;
-            }
+            else moving.SetTrigger("Stop");
 
         }
 
@@ -82,37 +69,19 @@ namespace Assets.Scripts
             velocity.y += gravity * Time.deltaTime;
         }
 
-        public void SetDirectionalInput(Vector2 input)
+        public void SetDirectionalInput(Vector2 directionalInput)
         {
-
-            directionalInput = input;
+            this.directionalInput = directionalInput;
         }
 
         public void OnJumpInputDown()
         {
-            if (CollisionsBelow())
+            if ((CanDoubleJump && !controller.collisions.below && !isDoubleJumping)
+                || controller.collisions.below)
             {
                 velocity.y = maxJumpVelocity;
                 isDoubleJumping = false;
             }
-            if (canDoubleJump && !CollisionsBelow() && !isDoubleJumping) //&& !wallSliding)
-            {
-                velocity.y = maxJumpVelocity;
-                isDoubleJumping = false;
-            }
-        }
-
-        private bool CollisionsBelow()
-        {
-            try
-            {
-                return controller.collisions.below;
-            }
-            catch (Exception)
-            {
-                return true;
-            }
-
         }
 
         public void OnJumpInputUp()
@@ -136,14 +105,14 @@ namespace Assets.Scripts
                 {
 
                     Destroy(coll.gameObject);
-                    killed1 = true;
+                    Killed1 = true;
 
                 }
                 if (coll.gameObject.tag == "Kill2")
                 {
 
                     Destroy(coll.gameObject);
-                    killed2 = true;
+                    Killed2 = true;
                     Possess.level++;
 
                 }
