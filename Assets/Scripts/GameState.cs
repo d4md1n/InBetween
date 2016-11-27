@@ -29,8 +29,6 @@ namespace Assets.Scripts
                 dialogue.enabled = false;
                 play = true;
                 player.GetComponent<Player>().enabled = true;
-                print("game began");
-                print(player.GetComponent<Player>().CanDoubleJump);
             }
 
             if (Input.GetKeyDown(KeyCode.Escape) && !dialogue.enabled)
