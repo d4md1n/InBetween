@@ -21,6 +21,11 @@ namespace Assets.Scripts
             {
                 player.OnJumpInputDown();
             }
+
+            if (Input.GetButtonUp("Jump"))
+            {
+                player.OnJumpInputUp();
+            }
         }
     }
 }

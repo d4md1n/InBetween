@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -22,7 +22,7 @@ namespace Assets.Scripts
         private float gravity;
         private float maxJumpVelocity;
         private float minJumpVelocity;
-        private Vector3 velocity;
+        public Vector3 velocity;
         private float velocityXSmoothing;
 
         private Controller2D controller;
@@ -33,12 +33,21 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            moving = GetComponent<Animator>();
-            controller = GetComponent<Controller2D>();
+            AssignComponents();
+            CalculateConstants();
+        }
+
+        private void CalculateConstants()
+        {
             gravity = -(2 * MaxJumpHeight) / Mathf.Pow(TimeToJumpApex, 2);
             maxJumpVelocity = Mathf.Abs(gravity) * TimeToJumpApex;
             minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * MinJumpHeight);
+        }
 
+        private void AssignComponents()
+        {
+            moving = GetComponent<Animator>();
+            controller = GetComponent<Controller2D>();
         }
 
         private void Update()
@@ -46,6 +55,11 @@ namespace Assets.Scripts
             CalculateVelocity();
             controller.Move(velocity * Time.deltaTime, directionalInput);
             ControlPlayerAnimation();
+
+            if (controller.collisions.above || controller.collisions.below)
+            {
+                velocity.y = 0f;
+            }
         }
 
         private void ControlPlayerAnimation()
@@ -76,10 +90,31 @@ namespace Assets.Scripts
 
         public void OnJumpInputDown()
         {
-            if (CanFly || controller.collisions.below)
+            if (CanFly || CollisionsBelow())
             {
                 velocity.y = maxJumpVelocity;
             }
+        }
+
+        public void OnJumpInputUp()
+        {
+            if (velocity.y > minJumpVelocity)
+            {
+                velocity.y = minJumpVelocity;
+            }
+        }
+
+        private bool CollisionsBelow()
+        {
+            try
+            {
+                return controller.collisions.below;
+            }
+            catch
+            {
+                return true;
+            }
+
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
