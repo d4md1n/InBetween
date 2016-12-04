@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -19,9 +18,9 @@ namespace Assets.Scripts
         private float accelerationTimeGrounded = .1f;
         private float moveSpeed = 6f;
 
-        private float gravity;
-        private float maxJumpVelocity;
-        private float minJumpVelocity;
+        public float gravity;
+        public float maxJumpVelocity;
+        public float minJumpVelocity;
         public Vector3 velocity;
         private float velocityXSmoothing;
 
@@ -31,7 +30,7 @@ namespace Assets.Scripts
         private Vector2 directionalInput;
 
 
-        private void Start()
+        public void Start()
         {
             AssignComponents();
             CalculateConstants();
@@ -81,6 +80,8 @@ namespace Assets.Scripts
             float targetVelocityX = directionalInput.x * moveSpeed;
             velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing,
                 (controller.collisions.below ? accelerationTimeGrounded : accelerationTimeAirborne));
+
+            velocity.y += gravity/75;
         }
 
         public void SetDirectionalInput(Vector2 directionalInput)
@@ -112,7 +113,7 @@ namespace Assets.Scripts
             }
             catch
             {
-                return true;
+                return false;
             }
 
         }
